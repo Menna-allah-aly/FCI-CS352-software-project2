@@ -44,7 +44,8 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	    
 	    <servlet-name>Controllers</servlet-name>
 		<url-pattern>/social/*</url-pattern>
-	    
+	    <servlet-name>Controllers</servlet-name>
+		<url-pattern>/social/social/*</url-pattern>
 	    
 	</servlet-mapping>
 </web-app>
