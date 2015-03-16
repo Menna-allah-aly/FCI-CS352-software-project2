@@ -21,6 +21,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.server.mvc.Viewable;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -46,69 +47,118 @@ public class UserController {
 	 * 
 	 * @return sign up page
 	 */
+	@POST
+	@Path("/doSearch")
+	public Response usersList(@FormParam("uname") String uname){
+		System.out.println(uname);
+		String serviceUrl = "http://fci-cs352-software-project2.appspot.com/rest/SearchService";
+		String urlParameters = "uname=" + uname;
+		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
+				"application/x-www-form-urlencoded;charset=UTF-8");
+		
+		return null;
+	}
 	@GET
 	@Path("/signup")
 	public Response signUp() {
 		return Response.ok(new Viewable("/jsp/register")).build();
 	}
-	@GET
-	@Path("/signout")
-	public Response signOut() {
-		//String serviceUrl = "http://localhost:8888/rest/signout";
-		//String retJson = Connection.connect(serviceUrl, "", "POST",
-		//		"application/x-www-form-urlencoded;charset=UTF-8");
-		//return retJson;
-		User.setCurrentActiveUser();
-				
-		return Response.ok(new Viewable("/jsp/entryPoint")).build();
-	}
-	
-	@GET
-	@Path("/acceptfriend")
-	@Produces("text/html")
-	public Response acceptfriend() {
-		String serviceUrl = "http://localhost:8888/rest/acceptfriend";
-		String retJson = Connection.connect(serviceUrl, "", "POST",
-				"application/x-www-form-urlencoded;charset=UTF-8");
-		//return retJson;
-		
-		return Response.ok(new Viewable("/jsp/home")).build();
-	}
-	
-	/*@POST
-	@Path("/sendrequest")
-	public Response sendrequest(@FormParam("addedFriend") String friend) {
-		
-		String serviceUrl = "http://localhost:8888/rest/sendrequest";
-		System.out.print(friend);
-		String parameters="friend="+ friend ;
-		String retJson = Connection.connect(serviceUrl, parameters, "POST",
-				"application/x-www-form-urlencoded;charset=UTF-8");
-		//return retJson;
-		
-		return Response.ok(new Viewable("/jsp/home")).build();
-	}
-	*/
-	@POST
-	@Path("/sendrequest")
-	public Response sendrequest(@FormParam("addedFriend") String friend) {
-		
-		String serviceUrl = "http://localhost:8888/rest/sendrequest";
-		System.out.print(friend);
-		String parameters="friend="+ friend ;
-		String retJson = Connection.connect(serviceUrl, parameters, "POST",
-				"application/x-www-form-urlencoded;charset=UTF-8");
-		//return retJson;
-		
-		return Response.ok(new Viewable("/jsp/home")).build();
-	}
 
+	
+	@POST
+	@Path("/search")
+	public Response search(@FormParam("searchemail") String email){
+	//	return Response.ok(new Viewable("/jsp/home")).build();
+		String serviceUrl = "http://fci-cs352-software-project2.appspot.com/rest/search";
+		String urlParameters = "searchemail=" + email;
+		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
+				"application/x-www-form-urlencoded;charset=UTF-8");
+		JSONParser parser = new JSONParser();
+		Object obj;
+		try {
+			// System.out.println(retJson);
+			obj = parser.parse(retJson);
+			JSONObject object = (JSONObject) obj;
+			
+			Map<String, String> map = new HashMap<String, String>();
+			//User user = User.getUser(object.toJSONString());
+			if (object.get("Status").toString().equals("OK")){
+			map.put("name", object.get("name").toString());
+		//	map.put("email", user.getEmail());
+			return Response.ok(new Viewable("/jsp/search", map)).build();}
+			else{
+				map.put("name", "the name not found :s");
+				//	map.put("email", user.getEmail());
+					return Response.ok(new Viewable("/jsp/notfounded", map)).build();}
+
+			
+		
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+		
+			e.printStackTrace();
+		}
+		return null;
+	}
 	/**
 	 * Action function to render home page of application, home page contains
 	 * only signup and login buttons
 	 * 
 	 * @return enty point page (Home page of this application)
 	 */
+	
+	
+	@POST
+	@Path("/acceptsearch")
+	public String searchforrequest(){
+	//	return Response.ok(new Viewable("/jsp/home")).build();
+		String serviceUrl = "http://fci-cs352-software-project2.appspot.com/rest/SearchOnPeopleAdd";
+		//String urlParameters = "searchemail=" + email;
+		String retJson = Connection.connect(serviceUrl, "", "POST",
+				"application/x-www-form-urlencoded;charset=UTF-8");
+		JSONParser parser = new JSONParser();
+		Object obj;
+		try {
+			// System.out.println(retJson);
+			obj = parser.parse(retJson);
+			JSONObject object = (JSONObject) obj;
+			
+			Map<String, String> map = new HashMap<String, String>();
+			//User user = User.getUser(object.toJSONString());
+			JSONArray arr= (JSONArray) object.get("request");
+			if (object.get("Status").toString().equals("OK")){
+				for(Integer i=0;i<arr.size();i++)
+				map.put("name"+i.toString(), arr.get(i).toString());
+		//	map.put("email", user.getEmail());
+//			return Response.ok(new Viewable("/jsp/searchonrequestedpeople", map)).build();
+				return arr.toJSONString(); }
+			else{
+				map.put("name", "the name not found :s");
+				//	map.put("email", user.getEmail());
+			//		return Response.ok(new Viewable("/jsp/notfounded", map)).build();
+			return "ss"	;
+			}
+
+			
+		
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+		
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	@GET
 	@Path("/")
 	public Response index() {
@@ -126,12 +176,7 @@ public class UserController {
 	public Response login() {
 		return Response.ok(new Viewable("/jsp/login")).build();
 	}
-	
-	/*@GET
-	@Path("/sendrequest")
-	public Response sendrequest() {
-		return Response.ok(new Viewable("/jsp/home")).build();
-	}*/
+
 	/**
 	 * Action function to response to signup request, This function will act as
 	 * a controller part and it will calls RegistrationService to make
@@ -151,7 +196,7 @@ public class UserController {
 	public String response(@FormParam("uname") String uname,
 			@FormParam("email") String email, @FormParam("password") String pass) {
 
-		String serviceUrl = "http://localhost:8888/rest/RegistrationService";
+		String serviceUrl = "http://fci-cs352-software-project2.appspot.com/rest/RegistrationService";
 		String urlParameters = "uname=" + uname + "&email=" + email
 				+ "&password=" + pass;
 		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
@@ -196,7 +241,7 @@ public class UserController {
 		String urlParameters = "uname=" + uname + "&password=" + pass;
 
 		String retJson = Connection.connect(
-				"http://localhost:8888/rest/LoginService", urlParameters,
+				"http://fci-cs352-software-project2.appspot.com/rest/LoginService", urlParameters,
 				"POST", "application/x-www-form-urlencoded;charset=UTF-8");
 
 		JSONParser parser = new JSONParser();
@@ -222,6 +267,41 @@ public class UserController {
 		 */
 		return null;
 
+	}
+	@POST
+	@Path("/signout")
+	@Produces("text/html")
+	public Response signout(){
+		return Response.ok(new Viewable("/jsp/entryPoint")).build();
+	}
+	
+	@POST
+	@Path("/sendrequest")
+	@Produces("text/html")
+	public Response sendrequest(@FormParam("friendemail") String femail){
+		String serviceUrl = "http://fci-cs352-software-project2.appspot.com/rest/sendrequest";
+		String urlParameters = "friendemail=" + femail ;
+		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
+				"application/x-www-form-urlencoded;charset=UTF-8");
+		return Response.ok(new Viewable("/jsp/home")).build();
+	}
+	
+	@POST
+	@Path("/acceptrequest")
+	@Produces("text/html")
+	public Response acceptrequest(@FormParam("acceptfriend") String femail){
+		String serviceUrl = "http://fci-cs352-software-project2.appspot.com/rest/acceptrequest";
+		String urlParameters = "acceptfriend=" + femail ;
+		String retJson = Connection.connect(serviceUrl ,urlParameters, "POST",
+				"application/x-www-form-urlencoded;charset=UTF-8");
+		return Response.ok(new Viewable("/jsp/accept")).build();
+	}
+	
+	@POST
+	@Path("/accept")
+	@Produces("text/html")
+	public Response accept(){
+		return Response.ok(new Viewable("/jsp/home")).build();
 	}
 
 }

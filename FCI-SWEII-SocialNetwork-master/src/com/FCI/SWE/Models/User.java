@@ -54,8 +54,7 @@ public class User {
 		return currentActiveUser;
 	}
 	public static void setCurrentActiveUser(){
-		currentActiveUser=null;
-	}
+		 currentActiveUser=null;}
 	
 	/**
 	 * 

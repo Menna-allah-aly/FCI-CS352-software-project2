@@ -21,6 +21,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.server.mvc.Viewable;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -47,6 +48,12 @@ public class UserServices {
 	public Response index() {
 		return Response.ok(new Viewable("/jsp/entryPoint")).build();
 	}*/
+	
+	/*@POST
+	@Path("/SearchService")
+	public String searchFriend(@FormParam("uname") String uname){
+		
+	}*/
 
 
 		/**
@@ -61,15 +68,6 @@ public class UserServices {
 	 *            provided password
 	 * @return Status json
 	 */
-	@POST
-	@Path("/signout")
-	public String signOutService()
-    {
-		User.setCurrentActiveUser();
-		JSONObject object = new JSONObject();
-		object.put("Status", "OK");
-		return object.toString();
-	}
 	@POST
 	@Path("/RegistrationService")
 	public String registrationService(@FormParam("uname") String uname,
@@ -107,32 +105,83 @@ public class UserServices {
 		return object.toString();
 
 	}
-	/*@POST
-	@Path("/sendrequest")
-	public String sendrequestservice(@FormParam("friend") String uname) {
-		JSONObject object = new JSONObject();
-	     UserEntity.savefriend(uname);
-	//	System.out.print(uname);
-		
-			object.put("Status", "Accept");
-
-		
-		return object.toString();
-
-	}*/
-	
 	@POST
-	@Path("/acceptfriend")
-	public String acceptfriendservice() {
+	@Path("/signoutService")
+	public String signoutService() {
+		User.setCurrentActiveUser();
 		JSONObject object = new JSONObject();
-	   UserEntity.acceptfriend();
+		object.put("status"," success");
 		
-			object.put("Status", "Accept");
- 
+			return object.toString();
+
+	}
+	@POST
+	@Path("/sendrequest")
+	public String sendrequestService(@FormParam("friendemail") String uemail)
+			{
+		JSONObject object = new JSONObject();
+		UserEntity.sendrequest(uemail);
 		
+		object.put("status"," success");
+		//System.out.print(uemail);
+		//object.put("status", "accept");
 		return object.toString();
 
 	}
 	
+	@POST
+	@Path("/acceptrequest")
+	public String acceptrequestService(@FormParam("acceptfriend") String femail)
+			{
+		JSONObject object = new JSONObject();
+		UserEntity.getrequest(femail);
+		
+     object.put("status"," accept");
+		return object.toString();
+
+	}
+
+	@POST
+	@Path("/search")
+	public String searchService(@FormParam("searchemail") String email) {
+		JSONObject object = new JSONObject();
+	UserEntity user = UserEntity.search(email);
+		if (user == null) {
+			object.put("Status", "Failed");
+
+		} else {
+			object.put("Status", "OK");
+			object.put("name", user.getName());
+			object.put("email", user.getEmail());
+			//object.put("password", user.getPass());
+			//object.put("id", user.getId());
+		}
+		return object.toJSONString();
+
+	}
+
+	
+	@POST
+	@Path("/SearchOnPeopleAdd")
+	public String SearchOnPeopleAdd() {
+		JSONObject object = new JSONObject();
+	    ArrayList<String> request = UserEntity.SearchOnPeopleAdd();
+	    JSONArray arr= new JSONArray();
+	    
+		if (request == null) {
+			object.put("Status", "Failed");
+
+		} else {
+			object.put("Status", "OK");
+			for(int i=0;i<request.size();i++)
+			{
+				arr.add(request.get(i));
+			}
+			object.put("request", arr);
+		}
+		return object.toJSONString();
+
+	}
+
 
 }
