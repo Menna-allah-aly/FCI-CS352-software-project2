@@ -53,6 +53,7 @@ public class User {
 	public static User getCurrentActiveUser(){
 		return currentActiveUser;
 	}
+	
 	public static void setCurrentActiveUser(){
 		 currentActiveUser=null;}
 	

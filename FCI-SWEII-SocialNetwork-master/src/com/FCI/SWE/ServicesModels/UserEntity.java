@@ -89,7 +89,12 @@ public class UserEntity {
 	 *            user password
 	 * @return Constructed user entity
 	 */
-
+/**
+ * 
+ * @param name
+ * @param pass
+ * @return null
+ */
 	public static UserEntity getUser(String name, String pass) {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
@@ -114,6 +119,10 @@ public class UserEntity {
 	 * This method will be used to save user object in datastore
 	 * 
 	 * @return boolean if user is saved correctly or not
+	 */
+	/**
+	 * 
+	 * @return null
 	 */
 	public Boolean saveUser() {
 		DatastoreService datastore = DatastoreServiceFactory
@@ -142,6 +151,11 @@ public class UserEntity {
 		return true;
 
 	}
+	/**
+	 * 
+	 * @param friendEmail
+	 * for sending request
+	 */
 	
 	public static void sendrequest(String friendEmail) {
 		
@@ -164,7 +178,12 @@ public class UserEntity {
 		
 		//return true;
 	}
-	
+	/**
+	 * 
+	 * @param fname
+	 * for accepting friend request
+	 * @return null
+	 */
 	
 	public static UserEntity getrequest(String fname) {
 		String myEmail=User.getCurrentActiveUser().getEmail().toString();
@@ -176,9 +195,9 @@ public class UserEntity {
 		for (Entity entity : pq.asIterable()) {
 if (entity.getProperty("friendEmail").toString().equals(myEmail)&&entity.getProperty("myEmail").toString().equals(fname)) {
 				
-				entity.setProperty("status", "accept");
+			entity.setProperty("status", "accept");
 						
-				datastore.put(entity);
+			datastore.put(entity);
 				
 			}
 		}
@@ -187,7 +206,11 @@ if (entity.getProperty("friendEmail").toString().equals(myEmail)&&entity.getProp
 	}
 
 	
-	
+	/**
+	 * for search on person
+	 * @param email
+	 * @return null
+	 */
 	
 	public static UserEntity search(String email) {
 		DatastoreService datastore = DatastoreServiceFactory
@@ -208,14 +231,18 @@ if (entity.getProperty("friendEmail").toString().equals(myEmail)&&entity.getProp
 		return null;
 	}
 
-	
+	/**
+	 * used for person to accept 
+	 * @return array list of string 
+	 * 
+	 */
 	public static ArrayList<String> SearchOnPeopleAdd() {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 		ArrayList<String> requests= new ArrayList<String>();
 		Query gaeQuery = new Query("friends");
 		PreparedQuery pq = datastore.prepare(gaeQuery);
-		for (Entity entity : pq.asIterable()) {
+	for (Entity entity : pq.asIterable()) {
 			if (entity.getProperty("friendEmail").toString().equals(User.getCurrentActiveUser().getEmail().toString())&&
 					!entity.getProperty("status").toString().equals("accept")) {
 				requests.add(entity.getProperty(
@@ -226,8 +253,120 @@ if (entity.getProperty("friendEmail").toString().equals(myEmail)&&entity.getProp
 		return requests;
 		//return null;
 	}
-
+	/**
+	 * 
+	 * @param friendemail
+	 * @param mess
+	 * for send mess
+	 * 
+	 */
+	public static void sendmsg(String friendemail,String mess) {
+		
+		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+			
+			Query gaeQuery = new Query("msg");
+			PreparedQuery pq = datastore.prepare(gaeQuery);
+			List<Entity> list = pq.asList(FetchOptions.Builder.withDefaults());
+			
+			
+			Entity employee = new Entity("msg", list.size() + 1);
+			employee.setProperty("friendEmail",friendemail );
+			
+			employee.setProperty("myEmail", User.getCurrentActiveUser().getEmail().toString());
+			//employee.setProperty("status", "pending");
+			System.out.println(mess);
+			employee.setProperty("message", mess);
+		
+			
+			datastore.put(employee);
+			
+			
+			//return true;
+		}
+	/**
+	 * 
+	 * @param membername
+	 * @param convID
+	 * send group meaasge
+	 */
 	
+	public static void sendgroup_mesg(String membername,int convID) {
+		
+		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+			
+			Query gaeQuery = new Query("group");
+			PreparedQuery pq = datastore.prepare(gaeQuery);
+			List<Entity> list = pq.asList(FetchOptions.Builder.withDefaults());
+			
+			
+			Entity employee = new Entity("group", list.size() + 1);
+			employee.setProperty("membername", membername);
+			
+			employee.setProperty("group_ID", convID);
+		
+			
+			datastore.put(employee);
+			
+			
+			//return true;
+		}
+	
+	/**
+	 * 
+	 * @param message
+	 * @param chat_id
+	 * for sending mess
+	 */
+	
+public static void chat_message(String message,int chat_id) {
+		
+		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+			
+			Query gaeQuery = new Query("group_chat");
+			PreparedQuery pq = datastore.prepare(gaeQuery);
+			List<Entity> list = pq.asList(FetchOptions.Builder.withDefaults());
+			Entity employee = new Entity("group_chat", list.size() + 1);
+			employee.setProperty("Message", message);
+			
+			employee.setProperty("group_ID", chat_id);
+			employee.setProperty("sender",User.getCurrentActiveUser().getName().toString());
+		
+			
+			datastore.put(employee);
+			
+			
+			//return true;
+		}
+	
+	
+	
+	/*public static void conversation(String myemail,String mess,int convID) {
+		
+		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+			
+			Query gaeQuery = new Query("conversation");
+			PreparedQuery pq = datastore.prepare(gaeQuery);
+			List<Entity> list = pq.asList(FetchOptions.Builder.withDefaults());
+			
+			
+			Entity employee = new Entity("conversation", list.size() + 1);
+			employee.setProperty("conversationID",convID );
+			
+			employee.setProperty("Sender", User.getCurrentActiveUser().getName().toString());
+			//employee.setProperty("status", "pending");
+			//System.out.println(mess);
+			employee.setProperty("message", mess);
+		
+			
+			datastore.put(employee);
+			
+			
+			//return true;
+		}*/
 
 	
 }
+
+
+
+

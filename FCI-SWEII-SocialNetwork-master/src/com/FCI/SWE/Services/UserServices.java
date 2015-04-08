@@ -183,5 +183,48 @@ public class UserServices {
 
 	}
 
+	@POST
+	@Path("/sendmsg")
+	public String sendmsgService(@FormParam("friendemail") String uemail,@FormParam("sendmsg")String message)
+			{
+		JSONObject object = new JSONObject();
+		UserEntity.sendmsg(uemail,message);
+		
+		object.put("Status"," success");
+	
+		return object.toString();
 
+	}
+	
+	
+	
+	
+	@POST
+	@Path("/group")
+	public String sendgroup(@FormParam("membername") String memebr_name,@FormParam("ID")int id)
+			{
+		JSONObject object = new JSONObject();
+		UserEntity.sendgroup_mesg(memebr_name,id);
+		
+		object.put("Status"," success");
+	
+		return object.toString();
+
+	}	
+	
+	@POST
+	@Path("/sendgroupmsg")
+	public String chat(@FormParam("message_of_group") String messagegroup,@FormParam("chat_id") int chat_id)
+			{
+		JSONObject object = new JSONObject();
+		UserEntity.chat_message(messagegroup,chat_id);
+		
+		object.put("Status"," success");
+	
+		return object.toString();
+
+	}	
+	
+	
+	
 }
