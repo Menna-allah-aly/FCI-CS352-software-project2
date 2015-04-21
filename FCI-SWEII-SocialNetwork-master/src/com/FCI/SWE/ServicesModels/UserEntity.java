@@ -18,6 +18,7 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Transaction;
+import com.google.appengine.api.memcache.MemcacheSerialization.Flag;
 
 /**
  * <h1>User Entity class</h1>
@@ -54,7 +55,15 @@ public class UserEntity {
 	 {this.name = name;
 		this.email = email;}
 	 
+	 public UserEntity ()
+	 {}
 	 
+	 public UserEntity (String name)
+	 {
+		 this.name=name;
+	 }
+	 
+ 
 	 
 	 
 	 private void setId(long id){
@@ -364,9 +373,177 @@ public static void chat_message(String message,int chat_id) {
 			//return true;
 		}*/
 
+
+
+public static void activepage(String name) {
 	
+	System.out.println(name);
+	DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+		
+		Query gaeQuery = new Query("page_like");
+		PreparedQuery pq = datastore.prepare(gaeQuery);
+		List<Entity> list = pq.asList(FetchOptions.Builder.withDefaults());
+		
+		
+		Entity employee = new Entity("page_like", list.size() + 1);
+		
+		employee.setProperty("page_name",name );
+		employee.setProperty("who_like_page",User.getCurrentActiveUser().getName().toString() );
+		datastore.put(employee);
+		
+		DatastoreService datastore1 = DatastoreServiceFactory.getDatastoreService();
+		boolean flag=false;
+		Query gaeQuery1 = new Query("page");
+		PreparedQuery pq1 = datastore1.prepare(gaeQuery1);
+		
+		List<Entity> list1 = pq1.asList(FetchOptions.Builder.withDefaults());
+		for (Entity entity : pq1.asIterable()) {
+			if (entity.getProperty("page_name").toString().equals(name)) {
+				Entity employee1 = new Entity("page");
+				employee1.setProperty("numberOflike",Integer.parseInt(entity.getProperty("numberOflike").toString())+1 );
+				employee1.setProperty("category", entity.getProperty("category"));
+				employee1.setProperty("type",entity.getProperty("type") );
+				employee1.setProperty("page_name",entity.getProperty("page_name"));
+				datastore1.delete(entity.getKey());
+				datastore1.put(employee1);
+				UserEntity returnedUser = new UserEntity(entity.getProperty("page_name").toString());
+		//		flag=true;
+				returnedUser.setId(entity.getKey().getId());
+		}
+		}
+	};
+/*public static UserEntity activepage(String name)
+{
+	DatastoreService datastore = DatastoreServiceFactory
+			.getDatastoreService();
+
+	Query gaeQuery = new Query("page likes");
+	PreparedQuery pq = datastore.prepare(gaeQuery);
+	for (Entity entity : pq.asIterable()) {
+if (entity.getProperty("page name").toString().equals(name)) 
+        { int numberOfLikes=0;			
+		entity.setProperty("numberOfLike",numberOfLikes+1);
+		
+		//ezay nezowed 1 fe el data store 3ashan el like	
+		}
+	}
+
+	return null;
+
+	
+}*/
+
+
+public static void create_page(String name,String category,String type)
+{
+	
+	System.out.println(name);
+	DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+	boolean flag=false;
+	Query gaeQuery = new Query("page");
+	PreparedQuery pq = datastore.prepare(gaeQuery);
+	
+	
+	if(!flag)
+	{
+		Entity employee1 = new Entity("page");
+		employee1.setProperty("numberOflike",0 );
+		employee1.setProperty("category", category);
+		employee1.setProperty("type",type );
+	//	employee1.setProperty("ID/Name",entity.getProperty("ID/Name") );
+		employee1.setProperty("page_name",name);
+		
+		datastore.put(employee1);
+		
+	}
+}
+
+public static void savepost(String post,String Post_To) {
+	DatastoreService datastore = DatastoreServiceFactory
+			.getDatastoreService();
+
+	Query gaeQuery = new Query("Posts");
+	PreparedQuery pq = datastore.prepare(gaeQuery);
+	List<Entity> list = pq.asList(FetchOptions.Builder.withDefaults());
+
+	Entity employee = new Entity("Posts", list.size() + 2);
+	employee.setProperty("Post_From", User.getCurrentActiveUser().getName()
+			.toString());
+	
+	employee.setProperty("Post", post);
+
+	employee.setProperty("Post_To", Post_To);
+	
+
+	datastore.put(employee);
+
+	// return true;
+}
+
+public static void createTimelinePost (String PostType,String TimelineName,String Post,String Feeling,String Privacy) throws InstantiationException, IllegalAccessException, ClassNotFoundException  
+{
+System.out.println(PostType + " " + TimelineName + " " + Post + " " + Feeling+ " " + Privacy);
+Builder b = new Builder();
+
+//b.setPost(PostType);
+b.setTimelineName(TimelineName);
+b.setPost(Post);
+b.setFeeling(Feeling);
+b.setPrivacy(Privacy);
+
+b.checkType (PostType);
+
+
+}
+
+public static UserEntity seen(String name) {
+	DatastoreService datastore = DatastoreServiceFactory
+			.getDatastoreService();
+
+	Query gaeQuery = new Query("PagePosts");
+	PreparedQuery pq = datastore.prepare(gaeQuery);
+
+
+List<Entity> list1 = pq.asList(FetchOptions.Builder.withDefaults());
+for (Entity entity : pq.asIterable()) {
+	if (entity.getProperty("TimelineName").toString().equals(name)) {
+		Entity employee1 = new Entity("PagePosts");
+		employee1.setProperty("numofseen",Integer.parseInt(entity.getProperty("numofseen").toString())+1 );
+		employee1.setProperty("Feeling", entity.getProperty("Feeling"));
+		employee1.setProperty("Post",entity.getProperty("Post") );
+		employee1.setProperty("Privacy",entity.getProperty("Privacy"));
+		employee1.setProperty("TimelineName",entity.getProperty("TimelineName"));
+		datastore.delete(entity.getKey());
+		datastore.put(employee1);
+		UserEntity returnedUser = new UserEntity(entity.getProperty("TimelineName").toString());
+//		flag=true;
+		returnedUser.setId(entity.getKey().getId());
+}
+}
+
+	return null;
 }
 
 
 
+
+public static void create_hashtag(String htag,String hpost) {
+	
+	DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+		
+		Query gaeQuery = new Query("hashtag");
+		PreparedQuery pq = datastore.prepare(gaeQuery);
+		List<Entity> list = pq.asList(FetchOptions.Builder.withDefaults());
+		
+		
+		Entity employee = new Entity("hashtag", list.size() + 1);
+		employee.setProperty("hashtag",htag);
+		employee.setProperty("post",hpost);
+		employee.setProperty("myEmail", User.getCurrentActiveUser().getEmail().toString());
+		datastore.put(employee);
+		
+		
+		//return true;
+	}
+}
 

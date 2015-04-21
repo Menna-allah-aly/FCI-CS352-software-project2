@@ -65,6 +65,7 @@ public class UserController {
 	}
 	@GET
 	@Path("/signup")
+	@Produces("text/html")
 	public Response signUp() {
 		return Response.ok(new Viewable("/jsp/register")).build();
 	}
@@ -77,6 +78,7 @@ public class UserController {
 	 */
 	@POST
 	@Path("/search")
+	@Produces("text/html")
 	public Response search(@FormParam("searchemail") String email){
 	//	return Response.ok(new Viewable("/jsp/home")).build();
 		String serviceUrl = "http://localhost:8888/rest/search";
@@ -124,6 +126,7 @@ public class UserController {
 	
 	@POST
 	@Path("/acceptsearch")
+	@Produces("text/html")
 	public String searchforrequest(){
 	//	return Response.ok(new Viewable("/jsp/home")).build();
 		String serviceUrl = "http://localhost:8888/rest/SearchOnPeopleAdd";
@@ -175,6 +178,7 @@ public class UserController {
 	
 	@GET
 	@Path("/")
+	@Produces("text/html")
 	public Response index() {
 		return Response.ok(new Viewable("/jsp/entryPoint")).build();
 	}
@@ -212,8 +216,7 @@ public class UserController {
 			@FormParam("email") String email, @FormParam("password") String pass) {
 
 		String serviceUrl = "http://localhost:8888/rest/RegistrationService";
-		String urlParameters = "uname=" + uname + "&email=" + email
-				+ "&password=" + pass;
+		String urlParameters = "uname=" + uname + "&email=" + email+ "&password=" + pass;
 		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
 				"application/x-www-form-urlencoded;charset=UTF-8");
 		JSONParser parser = new JSONParser();
@@ -456,6 +459,7 @@ public class UserController {
 	public Response chat_message(@FormParam("message_of_group") String chat_msg,@FormParam("chat_id")int chat_id){
 		//System.out.println(message);
 		String serviceUrl = "http://localhost:8888/rest/sendgroupmsg";
+		
 		String urlParameters = "message_of_group=" + chat_msg+"&chat_id=" + chat_id ;
 		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
 				"application/x-www-form-urlencoded;charset=UTF-8");
@@ -477,5 +481,195 @@ public class UserController {
 		return null;
 	}
 	
+	@POST 
+	@Path("/create_page")
+	@Produces("text/html")
+  public Response createpage(){
+		return Response.ok(new Viewable("/jsp/create_page")).build();
+	}
 	
+
+	@POST 
+	@Path("/create_page_data")
+	@Produces("text/html")
+public Response create_page(@FormParam("name") String name,@FormParam("category") String category,@FormParam("type") String type) {
+		System.out.println(name);
+		System.out.println(type);
+		System.out.println(category);
+			String urlParameters ="name=" + name + "&category=" + category+ "&type=" + type;
+         String retJson = Connection.connect(
+				"http://localhost:8888/rest/create_pageService", urlParameters,
+				"POST", "application/x-www-form-urlencoded;charset=UTF-8");
+		
+       JSONParser parser = new JSONParser();
+		Object obj;
+		try {
+			// System.out.println(retJson);
+			obj = parser.parse(retJson);
+			JSONObject object = (JSONObject) obj;
+			if (object.get("Status").equals("success"))
+				return Response.ok(new Viewable("/jsp/active_page.jsp")).build();
+
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+
+@POST 
+@Path("/active_page")
+@Produces("text/html")
+public Response activepage(){
+	return Response.ok(new Viewable("/jsp/active_page")).build();
+}
+
+@POST
+@Path("/active_page_")
+@Produces("text/html")
+public Response active_page(@FormParam("page_name") String name)
+{System.out.println(name);
+	String serviceUrl = "http://localhost:8888/rest/activepageservice";
+	String urlParameters ="page_name=" + name;
+	System.out.println("hController"+ name);
+	String retJson = Connection.connect(serviceUrl, urlParameters , "POST",
+			"application/x-www-form-urlencoded;charset=UTF-8");
+	return Response.ok(new Viewable("/jsp/active_page")).build();
+}
+
+@POST
+@Path("/seen")
+@Produces("text/html")
+public Response seen(@FormParam("seenpage") String name)
+
+{	String serviceUrl = "http://localhost:8888/rest/seenservice";
+String urlParameters ="page_name=" + name;
+	String retJson = Connection.connect(serviceUrl, urlParameters , "POST",
+			"application/x-www-form-urlencoded;charset=UTF-8");
+	return Response.ok(new Viewable("/jsp/home")).build();
+}
+	
+/*	@POST
+	@Path("/create_page")
+	@Produces("text/html")
+	public Response create_pagee(@FormParam("name") String name,@FormParam("category") String category,@FormParam("type") String type){
+		System.out.println(name);
+		String serviceUrl = "http://localhost:8888/rest/create_pageService";
+		
+		String urlParameters = "name="+name+"&category="+category+"&type="+type;
+		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
+				"application/x-www-form-urlencoded;charset=UTF-8");
+		
+		//return Response.ok(new Viewable("/jsp/home")).build();
+		JSONParser parser = new JSONParser();
+		Object obj;
+		try {
+			// System.out.println(retJson);
+			obj = parser.parse(retJson);
+			JSONObject object = (JSONObject) obj;
+			if (object.get("Status").equals("success"))
+				return Response.ok(new Viewable("/jsp/create_page")).build();
+
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}*/
+	
+@POST
+@Path("/timeline")
+@Produces("text/html")
+public Response time() {
+	return Response.ok(new Viewable("/jsp/timeline")).build();
+}
+	
+
+@POST
+@Path("/post")
+@Produces("text/html")
+public Response post(@FormParam("post") String post,@FormParam("Post_To") String Post_To) {
+	String serviceUrl = "http://localhost:8888/rest/postservice";
+	String urlParameter = "post=" + post + "&Post_To= " + Post_To;
+			
+	String retJson2 = Connection.connect(serviceUrl, urlParameter, "POST",
+			"application/x-www-form-urlencoded;charset=UTF-8");
+	
+	return Response.ok(new Viewable("/jsp/timeline")).build();
+	
+}
+
+@POST
+@Path("tlpost")
+public Response tlpost() {
+	
+	return Response.ok(new Viewable("/jsp/timelinePost")).build();
+}
+
+@POST
+@Path("ppost")
+public Response ppost() {
+	
+	return Response.ok(new Viewable("/jsp/PagePost")).build();
+}
+
+
+
+@POST
+@Path("/TimelinePost")
+@Produces("text/html")
+public Response TimelinePost(@FormParam("PostType") String PostType ,@FormParam("TimelineName") String TimelineName
+		,@FormParam("Post") String Post
+		,@FormParam("Feeling") String Feeling,@FormParam("Privacy") String Privacy ) {
+	String serviceUrl = "http://localhost:8888/rest/TimelinePostService";
+	String urlParameters = "PostType="+ PostType +"&TimelineName=" + TimelineName +
+			"&Post=" + Post +"&Feeling=" + Feeling+ "&Privacy=" + Privacy;
+	String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
+			"application/x-www-form-urlencoded;charset=UTF-8");
+	return Response.ok(new Viewable("/jsp/home")).build();
+}
+
+
+@POST
+@Path("/PagePost")
+@Produces("text/html")
+public Response PagePost(@FormParam("PostType") String PostType ,@FormParam("TimelineName") String TimelineName
+		,@FormParam("Post") String Post
+		,@FormParam("Feeling") String Feeling,@FormParam("Privacy") String Privacy ) {
+	String serviceUrl = "http://localhost:8888/rest/PageService";
+	String urlParameters = "PostType="+ PostType +"&TimelineName=" + TimelineName +
+			"&Post=" + Post +"&Feeling=" + Feeling+ "&Privacy=" + Privacy;
+	String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
+			"application/x-www-form-urlencoded;charset=UTF-8");
+	return Response.ok(new Viewable("/jsp/home")).build();
+}
+
+
+@POST 
+@Path("/hashtag")
+@Produces("text/html")
+public Response create_page(@FormParam("hashtag") String htag,@FormParam("hashpost") String hpost) {
+
+		String urlParameters ="hashtag=" + htag + "&hashpost=" + hpost;
+     String retJson = Connection.connect(
+			"http://localhost:8888/rest/hashtagservice", urlParameters,
+			"POST", "application/x-www-form-urlencoded;charset=UTF-8");
+	
+   JSONParser parser = new JSONParser();
+	Object obj;
+	try {
+		// System.out.println(retJson);
+		obj = parser.parse(retJson);
+		JSONObject object = (JSONObject) obj;
+		if (object.get("Status").equals("success"))
+			return Response.ok(new Viewable("/jsp/home.jsp")).build();
+
+	} catch (ParseException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	return null;
+}
+
 }

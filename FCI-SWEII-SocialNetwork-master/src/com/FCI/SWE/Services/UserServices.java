@@ -226,5 +226,103 @@ public class UserServices {
 	}	
 	
 	
+	@POST
+	@Path("/create_pageService")
+public String create_pageService(@FormParam("name") String name,@FormParam("category") String category,@FormParam("type") String type)
+			{System.out.println(name);
+		JSONObject object = new JSONObject();
+		UserEntity.create_page(name,category,type);
+		
+		object.put("Status"," success");
 	
+		return object.toString();
+
+	}		
+	
+
+
+@POST
+	@Path("/activepageservice")
+	public String activepageservice(@FormParam("page_name") String pname)
+			{System.out.println(pname);
+		JSONObject object = new JSONObject();
+		UserEntity.activepage(pname);
+		
+		object.put("Status"," success");
+		System.out.println("Service"+ pname);
+		return object.toString();
+
+	}
+	
+@POST
+@Path("/postservice")
+public String postservice(@FormParam("post") String post,@FormParam("Post_To") String Post_To) {
+	JSONObject object = new JSONObject();
+	UserEntity.savepost(post,Post_To);
+
+	object.put("status", " success");
+	// System.out.print(uemail);
+	// object.put("status", "accept");
+	return object.toString();
+	
+
+}
+
+@POST
+@Path("/TimelinePostService")
+public String TimelinePostService(@FormParam("PostType") String PostType , @FormParam("TimelineName") String TimelineName
+		,@FormParam("Post") String Post
+		,@FormParam("Feeling")String Feeling
+		,@FormParam("Privacy") String Privacy ) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	JSONObject object = new JSONObject();
+	//Builder b =new Builder();
+	//b.checkType (PostType);
+	UserEntity.createTimelinePost(PostType,TimelineName,Post,Feeling,Privacy);
+	//Builder b =new Builder();
+	//b.checkType (PostType);
+	object.put("status", " accept");
+	return object.toString();
+}
+
+@POST
+@Path("/PageService")
+public String PageService(@FormParam("PostType") String PostType , @FormParam("TimelineName") String TimelineName
+		,@FormParam("Post") String Post
+		,@FormParam("Feeling")String Feeling
+		,@FormParam("Privacy") String Privacy ) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	JSONObject object = new JSONObject();
+	//Builder b =new Builder();
+	//b.checkType (PostType);
+	UserEntity.createTimelinePost(PostType,TimelineName,Post,Feeling,Privacy);
+	//Builder b =new Builder();
+	//b.checkType (PostType);
+	object.put("status", " accept");
+	return object.toString();
+}
+
+@POST
+@Path("/seenservice")
+public String seenservicee(@FormParam("seenpage") String name)
+		{
+	JSONObject object = new JSONObject();
+	UserEntity.seen(name);
+	
+	object.put("Status"," success");
+	
+	return object.toString();
+}
+
+
+@POST
+@Path("/hashtagservice")
+public String hashservice(@FormParam("hashtag") String htag,@FormParam("hashpost") String hpost)
+		{
+	JSONObject object = new JSONObject();
+	UserEntity.create_hashtag(htag,hpost);
+	
+	object.put("Status"," success");
+
+	return object.toString();
+
+}
 }

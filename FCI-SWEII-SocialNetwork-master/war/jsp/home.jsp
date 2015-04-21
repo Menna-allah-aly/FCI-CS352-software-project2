@@ -81,8 +81,39 @@ body {
 <input type="submit" value="Group_message">
 </form>
 
+<form action="/social/create_page" method="post"> 
+   <br>
+<input type="submit" value="create_page">
+</form>
 
 
+ <form action="/social/active_page_" method="post"> 
+ Enter the page name: <input type="text" name="page_name" /> <br>
+<input type="submit" value="like">
+
+</form> 
+
+<form action="/social/seen" method="post"> 
+ Enter pagename: <input type="text" name="seenpage" /> <br>
+ 
+ 
+<input type="submit" value="seen">
+</form> 
+
+
+<form action="/social/tlpost" method="post">  <br>
+<br> <input type="submit" value="Timeline Post"> 
+</form> 
+
+<form action="/social/ppost" method="post">  <br>
+<br> <input type="submit" value="Page Post"> 
+</form> 
+
+<form action="/social/hashtag" method="post"> 
+ Enter hashtag: <input type="text" name="hashtag" /> <br>
+ Enter post: <input type="text" name="hashpost" /> <br>
+ <input type="submit" value="enter">
+</form> 
 
 </body>
 </html>
