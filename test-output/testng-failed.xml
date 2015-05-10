@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Failed suite [Default suite]">
+  <test name="Default test(failed)">
+    <classes>
+      <class name="com.FCI.SWE.ServicesModels.Entitytest">
+        <methods>
+          <include name="search"/>
+          <include name="getrequest"/>
+          <include name="chat_message"/>
+          <include name="create_hashtag"/>
+          <include name="getUser"/>
+          <include name="SearchOnPeopleAdd"/>
+          <include name="sendrequest"/>
+          <include name="tearDown"/>
+          <include name="activepage"/>
+          <include name="sendmessage"/>
+          <include name="createTimelinePost"/>
+          <include name="setUp"/>
+          <include name="savepost"/>
+        </methods>
+      </class> <!-- com.FCI.SWE.ServicesModels.Entitytest -->
+    </classes>
+  </test> <!-- Default test(failed) -->
+</suite> <!-- Failed suite [Default suite] -->
