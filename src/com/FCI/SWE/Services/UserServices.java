@@ -127,8 +127,9 @@ public class UserServices {
 		//object.put("status", "accept");
 		return object.toString();
 
-	}
+	                }
 	
+	 //fuction for accept incoming requestes
 	@POST
 	@Path("/acceptrequest")
 	public String acceptrequestService(@FormParam("acceptfriend") String femail)
