@@ -15,11 +15,18 @@ import org.json.simple.parser.ParseException;
 import com.FCI.SWE.Models.User;
 
 @Path("/")
+
+
+//grouuuuuuuuuuuuuuuuuup
+
 @Produces("text/html")
 public class GroupController {
 
 	@GET
 	@Path("/group")
+
+
+
 	public Response group() {
 
 		if (User.getCurrentActiveUser() == null) {
