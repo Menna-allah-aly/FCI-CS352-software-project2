@@ -163,9 +163,9 @@ public class UserServices {
 	
 	@POST
 	@Path("/SearchOnPeopleAdd")
-	public String SearchOnPeopleAdd() {
+	public String Search_On_People_Add() {
 		JSONObject object = new JSONObject();
-	    ArrayList<String> request = UserEntity.SearchOnPeopleAdd();
+	    ArrayList<String> request = UserEntity.Searching_OnPeople_who_AddMe();
 	    JSONArray arr= new JSONArray();
 	    
 		if (request == null) {
@@ -302,10 +302,10 @@ public String PageService(@FormParam("PostType") String PostType , @FormParam("T
 
 @POST
 @Path("/seenservice")
-public String seenservicee(@FormParam("seenpage") String name)
+public String seen_page_servicee(@FormParam("seenpage") String name)
 		{
 	JSONObject object = new JSONObject();
-	UserEntity.seen(name);
+	UserEntity.seen_page(name);
 	
 	object.put("Status"," success");
 	

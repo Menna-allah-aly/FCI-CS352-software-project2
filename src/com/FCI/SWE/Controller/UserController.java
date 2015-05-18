@@ -29,31 +29,16 @@ import org.json.simple.parser.ParseException;
 import com.FCI.SWE.Models.User;
 import com.FCI.SWE.ServicesModels.UserEntity;
 
-/**
- * This class contains REST services, also contains action function for web
- * application
- * 
- * @author Mohamed Samir
- * @version 1.0
- * @since 2014-02-12
- *
- */
+
+
+
 @Path("/")
 @Produces("text/html")
 public class UserController {
-	/**
-	 * Action function to render Signup page, this function will be executed
-	 * using url like this /rest/signup
-	 * 
-	 * @return sign up page
-	 */
+	
 	@POST
 	@Path("/doSearch")
-	/**
-	 * 
-	 * @param uname
-	 * @return
-	 */
+	
 	public Response usersList(@FormParam("uname") String uname){
 		System.out.println(uname);
 		String serviceUrl = "http://localhost:8888/rest/SearchService";
@@ -63,6 +48,8 @@ public class UserController {
 		
 		return null;
 	}
+	
+	
 	@GET
 	@Path("/signup")
 	@Produces("text/html")
@@ -70,12 +57,15 @@ public class UserController {
 		return Response.ok(new Viewable("/jsp/register")).build();
 	}
 
+	
 	/**
 	 * 
 	 * @param email 
 	 * this function taking email for search to find specific person
 	 * @return null 
 	 */
+	
+	//search for specific user
 	@POST
 	@Path("/search")
 	@Produces("text/html")
@@ -99,35 +89,25 @@ public class UserController {
 		//	map.put("email", user.getEmail());
 			return Response.ok(new Viewable("/jsp/search", map)).build();}
 			else{
-				map.put("name", "the name not found :s");
-				//	map.put("email", user.getEmail());
-					return Response.ok(new Viewable("/jsp/notfounded", map)).build();}
+			map.put("name", "the name not found :s");
+			//	map.put("email", user.getEmail());
+			return Response.ok(new Viewable("/jsp/notfounded", map)).build();}
 
-			
-		
-		} catch (ParseException e) {
+			} 
+		   
+		catch (ParseException e) {
 			// TODO Auto-generated catch block
-		
-			e.printStackTrace();
+		e.printStackTrace();
 		}
 		return null;
 	}
-	/**
-	 * Action function to render home page of application, home page contains
-	 * only signup and login buttons
-	 * 
-	 * @return enty point page (Home page of this application)
-	 */
 	
-	/**
-	 * his function w make it to search on specific person who i want to accept his friend request
-	 * @return string
-	 */
 	
+//search in people who added me to accept them	
 	@POST
 	@Path("/acceptsearch")
 	@Produces("text/html")
-	public String searchforrequest(){
+	public String searching_On_requests(){
 	//	return Response.ok(new Viewable("/jsp/home")).build();
 		String serviceUrl = "http://localhost:8888/rest/SearchOnPeopleAdd";
 		//String urlParameters = "searchemail=" + email;
@@ -135,24 +115,26 @@ public class UserController {
 				"application/x-www-form-urlencoded;charset=UTF-8");
 		JSONParser parser = new JSONParser();
 		Object obj;
+		
 		try {
-			// System.out.println(retJson);
+		
 			obj = parser.parse(retJson);
 			JSONObject object = (JSONObject) obj;
 			
 			Map<String, String> map = new HashMap<String, String>();
 			//User user = User.getUser(object.toJSONString());
 			JSONArray arr= (JSONArray) object.get("request");
+			
 			if (object.get("Status").toString().equals("OK")){
-				for(Integer i=0;i<arr.size();i++)
+				
+				 for(Integer i=0;i<arr.size();i++)
 				map.put("name"+i.toString(), arr.get(i).toString());
-		//	map.put("email", user.getEmail());
-//			return Response.ok(new Viewable("/jsp/searchonrequestedpeople", map)).build();
-				return arr.toJSONString(); }
+		
+				return arr.toJSONString(); 
+				}
 			else{
 				map.put("name", "the name not found :s");
-				//	map.put("email", user.getEmail());
-			//		return Response.ok(new Viewable("/jsp/notfounded", map)).build();
+				
 			return "ss"	;
 			}
 
@@ -165,15 +147,6 @@ public class UserController {
 		}
 		return null;
 	}
-
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	@GET
@@ -183,12 +156,7 @@ public class UserController {
 		return Response.ok(new Viewable("/jsp/entryPoint")).build();
 	}
 
-	/**
-	 * Action function to render login page this function will be executed using
-	 * url like this /rest/login
-	 * 
-	 * @return login page
-	 */
+	
 	@GET
 	@Path("/login")
 	public Response login() {
@@ -196,19 +164,7 @@ public class UserController {
 	}
 	
 
-	/**
-	 * Action function to response to signup request, This function will act as
-	 * a controller part and it will calls RegistrationService to make
-	 * registration
-	 * 
-	 * @param uname
-	 *            provided user name
-	 * @param email
-	 *            provided user email
-	 * @param pass
-	 *            provided user password
-	 * @return Status string
-	 */
+	
 	@POST
 	@Path("/response")
 	@Produces(MediaType.TEXT_PLAIN)
@@ -233,10 +189,7 @@ public class UserController {
 			e.printStackTrace();
 		}
 
-		/*
-		 * UserEntity user = new UserEntity(uname, email, pass);
-		 * user.saveUser(); return uname;
-		 */
+		
 		return "Failed";
 	}
 
@@ -260,6 +213,7 @@ public class UserController {
 	 * @return null
 	 * 
 	 */
+	
 	@POST
 	@Path("/home")
 	@Produces("text/html")
@@ -272,6 +226,7 @@ public class UserController {
 
 		JSONParser parser = new JSONParser();
 		Object obj;
+		
 		try {
 			obj = parser.parse(retJson);
 			JSONObject object = (JSONObject) obj;
@@ -282,18 +237,18 @@ public class UserController {
 			map.put("name", user.getName());
 			map.put("email", user.getEmail());
 			return Response.ok(new Viewable("/jsp/home", map)).build();
-		} catch (ParseException e) {
+		     } 
+		
+		catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		/*
-		 * UserEntity user = new UserEntity(uname, email, pass);
-		 * user.saveUser(); return uname;
-		 */
+		
 		return null;
 
 	}
+	
 	/**
 	 * this function for sign out current active user
 	 * @return response
@@ -321,16 +276,19 @@ public class UserController {
 				"application/x-www-form-urlencoded;charset=UTF-8");
 		return Response.ok(new Viewable("/jsp/home")).build();
 	}
+	
 	/**
 	 * 
 	 * @param femail 
 	 * fun for accept request of friend
 	 * @return response
 	 */
+	
 	@POST
 	@Path("/acceptrequest")
 	@Produces("text/html")
 	public Response acceptrequest(@FormParam("acceptfriend") String femail){
+		System.out.println(femail);
 		String serviceUrl = "http://localhost:8888/rest/acceptrequest";
 		String urlParameters = "acceptfriend=" + femail ;
 		String retJson = Connection.connect(serviceUrl ,urlParameters, "POST",
@@ -342,6 +300,7 @@ public class UserController {
 	 * 
 	 * @return reponse
 	 */
+	
 	@POST
 	@Path("/accept")
 	@Produces("text/html")
@@ -361,7 +320,7 @@ public class UserController {
 	@POST
 	@Path("/sendmsg")
 	@Produces("text/html")
-	public Response sendmsg(@FormParam("friendemail") String friendemail,@FormParam("sendmsg")String message){
+	public Response sendmessage(@FormParam("friendemail") String friendemail,@FormParam("sendmsg")String message){
 		System.out.println(message);
 		String serviceUrl = "http://localhost:8888/rest/sendmsg";
 		String urlParameters = "friendemail=" + friendemail+"&sendmsg=" + message ;
@@ -371,14 +330,17 @@ public class UserController {
 		//return Response.ok(new Viewable("/jsp/home")).build();
 		JSONParser parser = new JSONParser();
 		Object obj;
+		
 		try {
 			// System.out.println(retJson);
 			obj = parser.parse(retJson);
 			JSONObject object = (JSONObject) obj;
+			
 			if (object.get("Status").equals("success"))
 				return Response.ok(new Viewable("/jsp/home")).build();
 
-		} catch (ParseException e) {
+		          }
+		catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -473,7 +435,8 @@ public class UserController {
 			if (object.get("Status").equals("success"))
 				return Response.ok(new Viewable("/jsp/group")).build();
 
-		} catch (ParseException e) {
+		} 
+		catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -488,6 +451,7 @@ public class UserController {
 	}
 	
 
+	// for creating page
 	@POST 
 	@Path("/create_page_data")
 	@Produces("text/html")
@@ -509,7 +473,9 @@ public Response create_page(@FormParam("name") String name,@FormParam("category"
 			if (object.get("Status").equals("success"))
 				return Response.ok(new Viewable("/jsp/active_page.jsp")).build();
 
-		} catch (ParseException e) {
+		        }
+		catch (ParseException e) 
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -522,13 +488,15 @@ public Response create_page(@FormParam("name") String name,@FormParam("category"
 @Produces("text/html")
 public Response activepage(){
 	return Response.ok(new Viewable("/jsp/active_page")).build();
-}
+                              }
+
 
 @POST
 @Path("/active_page_")
 @Produces("text/html")
 public Response active_page(@FormParam("page_name") String name)
-{System.out.println(name);
+{
+	System.out.println(name);
 	String serviceUrl = "http://localhost:8888/rest/activepageservice";
 	String urlParameters ="page_name=" + name;
 	System.out.println("hController"+ name);
@@ -536,14 +504,15 @@ public Response active_page(@FormParam("page_name") String name)
 			"application/x-www-form-urlencoded;charset=UTF-8");
 	return Response.ok(new Viewable("/jsp/active_page")).build();
 }
-
+ 
+//make seen for page
 @POST
 @Path("/seen")
 @Produces("text/html")
-public Response seen(@FormParam("seenpage") String name)
+public Response seen_page(@FormParam("seenpage") String name)
 
 {	String serviceUrl = "http://localhost:8888/rest/seenservice";
-String urlParameters ="page_name=" + name;
+     String urlParameters ="page_name=" + name;
 	String retJson = Connection.connect(serviceUrl, urlParameters , "POST",
 			"application/x-www-form-urlencoded;charset=UTF-8");
 	return Response.ok(new Viewable("/jsp/home")).build();
@@ -583,7 +552,8 @@ String urlParameters ="page_name=" + name;
 public Response time() {
 	return Response.ok(new Viewable("/jsp/timeline")).build();
 }
-	
+
+//for making post
 
 @POST
 @Path("/post")
@@ -595,7 +565,7 @@ public Response post(@FormParam("post") String post,@FormParam("Post_To") String
 	String retJson2 = Connection.connect(serviceUrl, urlParameter, "POST",
 			"application/x-www-form-urlencoded;charset=UTF-8");
 	
-	return Response.ok(new Viewable("/jsp/timeline")).build();
+	    return Response.ok(new Viewable("/jsp/timeline")).build();
 	
 }
 
@@ -614,13 +584,13 @@ public Response ppost() {
 }
 
 
-
+//formaking tmeline post
 @POST
 @Path("/TimelinePost")
 @Produces("text/html")
 public Response TimelinePost(@FormParam("PostType") String PostType ,@FormParam("TimelineName") String TimelineName
-		,@FormParam("Post") String Post
-		,@FormParam("Feeling") String Feeling,@FormParam("Privacy") String Privacy ) {
+		,@FormParam("Post") String Post,@FormParam("Feeling") String Feeling,@FormParam("Privacy") String Privacy ) {
+	
 	String serviceUrl = "http://localhost:8888/rest/TimelinePostService";
 	String urlParameters = "PostType="+ PostType +"&TimelineName=" + TimelineName +
 			"&Post=" + Post +"&Feeling=" + Feeling+ "&Privacy=" + Privacy;
@@ -629,13 +599,15 @@ public Response TimelinePost(@FormParam("PostType") String PostType ,@FormParam(
 	return Response.ok(new Viewable("/jsp/home")).build();
 }
 
-
+//for making page post
 @POST
 @Path("/PagePost")
 @Produces("text/html")
 public Response PagePost(@FormParam("PostType") String PostType ,@FormParam("TimelineName") String TimelineName
-		,@FormParam("Post") String Post
-		,@FormParam("Feeling") String Feeling,@FormParam("Privacy") String Privacy ) {
+		,@FormParam("Post") String Post,@FormParam("Feeling") String Feeling,@FormParam("Privacy") String Privacy ) {
+	
+	System.out.println(PostType);
+	System.out.println(TimelineName);
 	String serviceUrl = "http://localhost:8888/rest/PageService";
 	String urlParameters = "PostType="+ PostType +"&TimelineName=" + TimelineName +
 			"&Post=" + Post +"&Feeling=" + Feeling+ "&Privacy=" + Privacy;
@@ -644,11 +616,12 @@ public Response PagePost(@FormParam("PostType") String PostType ,@FormParam("Tim
 	return Response.ok(new Viewable("/jsp/home")).build();
 }
 
+// for making hashtag
 
 @POST 
 @Path("/hashtag")
 @Produces("text/html")
-public Response create_page(@FormParam("hashtag") String htag,@FormParam("hashpost") String hpost) {
+public Response create_hashtage(@FormParam("hashtag") String htag,@FormParam("hashpost") String hpost) {
 
 		String urlParameters ="hashtag=" + htag + "&hashpost=" + hpost;
      String retJson = Connection.connect(
@@ -664,7 +637,9 @@ public Response create_page(@FormParam("hashtag") String htag,@FormParam("hashpo
 		if (object.get("Status").equals("success"))
 			return Response.ok(new Viewable("/jsp/home.jsp")).build();
 
-	} catch (ParseException e) {
+	} 
+	catch (ParseException e) 
+	{
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}

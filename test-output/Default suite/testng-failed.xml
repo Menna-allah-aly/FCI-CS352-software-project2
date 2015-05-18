@@ -3,23 +3,13 @@
 <suite name="Failed suite [Default suite]">
   <test name="Default test(failed)">
     <classes>
-      <class name="com.FCI.SWE.ServicesModels.Entitytest">
+      <class name="com.FCI.SWE.ServicesModels.UserServicesTest">
         <methods>
-          <include name="search"/>
-          <include name="getrequest"/>
-          <include name="chat_message"/>
-          <include name="create_hashtag"/>
-          <include name="getUser"/>
-          <include name="SearchOnPeopleAdd"/>
-          <include name="sendrequest"/>
-          <include name="tearDown"/>
-          <include name="activepage"/>
-          <include name="sendmessage"/>
-          <include name="createTimelinePost"/>
-          <include name="setUp"/>
-          <include name="savepost"/>
+          <include name="TimelinePostService"/>
+          <include name="acceptrequestService"/>
+          <include name="PageService"/>
         </methods>
-      </class> <!-- com.FCI.SWE.ServicesModels.Entitytest -->
+      </class> <!-- com.FCI.SWE.ServicesModels.UserServicesTest -->
     </classes>
   </test> <!-- Default test(failed) -->
 </suite> <!-- Failed suite [Default suite] -->
